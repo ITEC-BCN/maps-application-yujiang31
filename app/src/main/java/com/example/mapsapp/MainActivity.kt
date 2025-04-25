@@ -14,6 +14,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.ViewModel
 import com.example.mapsapp.ui.navigation.InternalNavigationWrapper
 import com.example.mapsapp.ui.navigation.MainNavigationWrapper
+import com.example.mapsapp.ui.screens.DrawerScreen
 import com.example.mapsapp.ui.screens.PermissionsScreen
 import com.example.mapsapp.ui.theme.MapsAppTheme
 import com.example.mapsapp.viewmodels.PermissionViewModel
@@ -25,7 +26,7 @@ import com.example.mapsapp.viewmodels.PermissionViewModel
         enableEdgeToEdge()
         setContent {
             MapsAppTheme (){
-
+                DrawerScreen()
             }
         }
     }

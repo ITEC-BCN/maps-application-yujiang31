@@ -2,7 +2,9 @@ package com.example.mapsapp.ui.screens
 
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.List
 import androidx.compose.material.icons.filled.Menu
+import androidx.compose.material.icons.filled.Place
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -21,19 +23,29 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.rememberNavController
 import com.example.mapsapp.ui.navigation.Destinations
-import com.example.mapsapp.ui.navigation.DrawerItem
 import com.example.mapsapp.ui.navigation.InternalNavigationWrapper
 import com.example.mapsapp.viewmodels.PermissionViewModel
 import kotlinx.coroutines.launch
 
 
+enum class DrawerItem(
+    val icon: ImageVector,
+    val text: String,
+    val route: Destinations
+){
+    Map(Icons.Default.Place, "Map", Destinations.Map),
+    List(Icons.Default.List, "List", Destinations.List),
+}
+
+
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DrawerScreen(){
-
 
     val viewmodel:PermissionViewModel = viewModel()
     val navController = rememberNavController()
@@ -64,7 +76,7 @@ fun DrawerScreen(){
         Scaffold(
             topBar = {
                 TopAppBar(
-                    title = { Text("Awesome App") },
+                    title = { Text("Maps App") },
                     navigationIcon = {
                         IconButton(onClick = { scope.launch { drawerState.open() } }) {
                             Icon(imageVector = Icons.Default.Menu, contentDescription = "Menu")
