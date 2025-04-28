@@ -29,6 +29,7 @@ import androidx.compose.ui.unit.sp
 import androidx.core.app.ActivityCompat
 import com.example.mapsapp.utils.PermissionStatus
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.mapsapp.ui.navigation.InternalNavigationWrapper
 import com.example.mapsapp.viewmodels.PermissionViewModel
 
 @Composable
@@ -52,7 +53,7 @@ fun PermissionsScreen(navigateToDrawer: () -> Unit){
             val granted = result[permission] ?: false
             val status = when {
                 granted -> PermissionStatus.Granted
-                ActivityCompat.shouldShowRequestPermissionRationale(activity!! as Activity, permission) -> PermissionStatus.Denied
+                ActivityCompat.shouldShowRequestPermissionRationale(activity as Activity, permission) -> PermissionStatus.Denied
                 else -> PermissionStatus.PermanentlyDenied
             }
             viewModel.updatePermissionStatus(permission, status)
@@ -65,6 +66,16 @@ fun PermissionsScreen(navigateToDrawer: () -> Unit){
             launcher.launch(permissions.toTypedArray())
         }
     }
+
+    LaunchedEffect(permissionsStatus) {
+        val allPermissionsGranted = permissions.all { permission ->
+            permissionsStatus[permission] == PermissionStatus.Granted
+        }
+        if (allPermissionsGranted) {
+            navigateToDrawer()
+        }
+    }
+
 
     Column(
         modifier = Modifier.fillMaxSize(),

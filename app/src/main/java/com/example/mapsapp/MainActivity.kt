@@ -26,7 +26,7 @@ import com.example.mapsapp.viewmodels.PermissionViewModel
         enableEdgeToEdge()
         setContent {
             MapsAppTheme (){
-                DrawerScreen()
+                MainNavigationWrapper()
             }
         }
     }

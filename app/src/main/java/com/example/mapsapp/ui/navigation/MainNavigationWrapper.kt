@@ -18,13 +18,20 @@ fun MainNavigationWrapper(){
     NavHost(navController, Permissions){
         composable<Permissions>{
             PermissionsScreen{
+                navController.navigate(Drawer){
+                    popUpTo(Permissions){inclusive = true}
+                }
+            }
+        }
+
+
+        composable<Drawer> {
+
+            DrawerScreen {
                 navController.navigate(Drawer)
             }
         }
 
-        composable<Drawer>{
-            DrawerScreen()
-        }
     }
 
 }
