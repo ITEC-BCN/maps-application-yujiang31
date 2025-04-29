@@ -41,6 +41,23 @@ fun CameraScreen(){
     val bitmap = remember { mutableStateOf<Bitmap?>(null) }
     var showDialog by remember { mutableStateOf(false) }
 
+    val pickImageLauncher =
+        rememberLauncherForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
+            uri?.let {
+                imageUri.value = it
+                val stream = context.contentResolver.openInputStream(it)
+                bitmap.value = BitmapFactory.decodeStream(stream)
+            }
+        }
+
+
+    val takePictureLauncher =
+        rememberLauncherForActivityResult(ActivityResultContracts.TakePicture()) { success ->
+            if (success && imageUri.value != null) {
+                val stream = context.contentResolver.openInputStream(imageUri.value!!)
+                bitmap.value = BitmapFactory.decodeStream(stream)
+            }
+        }
 
     val launcher =
         rememberLauncherForActivityResult(ActivityResultContracts.TakePicture()) { success ->
@@ -64,6 +81,35 @@ fun CameraScreen(){
 
     }
 
+    if (showDialog) {
+        AlertDialog(
+            onDismissRequest = { showDialog = false },
+            title = { Text("Selecciona una opción") },
+            text = { Text("¿Quieres tomar una foto o elegir una desde la galería?") },
+            confirmButton = {
+                TextButton(onClick = {
+                    showDialog = false
+                    val uri = createImageUri(context)
+                    imageUri.value = uri
+                    takePictureLauncher.launch(uri!!)
+                }) {
+                    Text("Tomar Foto")
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = {
+                    showDialog = false
+                    pickImageLauncher.launch("image/*")
+                }) {
+                    Text("Elegir de Galería")
+                }
+            }
+        )
+    }
+
+
+
+
 
     Column(modifier = Modifier.fillMaxSize(), verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally) {
@@ -80,41 +126,6 @@ fun CameraScreen(){
                 modifier = Modifier.size(300.dp).clip(RoundedCornerShape(12.dp)),contentScale = ContentScale.Crop)
         }
     }
-
-
-    val pickImageLauncher =
-        rememberLauncherForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
-            uri?.let {
-                imageUri.value = it
-                val stream = context.contentResolver.openInputStream(it)
-                bitmap.value = BitmapFactory.decodeStream(stream)
-            }
-        }
-
-
-    if (showDialog) {
-        AlertDialog(onDismissRequest = { showDialog = false }, title = { Text("Selecciona una opción") },
-            text = { Text("¿Quieres tomar una foto o elegir una desde la galería?") },
-            confirmButton = {TextButton(onClick = {
-                showDialog = false
-                val uri = createImageUri(context)
-                imageUri.value = uri
-                takePictureLauncher.launch(uri!!)
-            }) { Text("Tomar Foto") }
-            },
-            dismissButton = {TextButton(onClick = {
-                showDialog = false
-                pickImageLauncher.launch("image/*")
-            }) { Text("Elegir de Galería") }
-            }
-        )
-    }
-
-
-
-
-
-
 
 }
 
