@@ -45,15 +45,14 @@ enum class DrawerItem(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun DrawerScreen(navigateToDrawer: () -> Unit){
+fun DrawerScreen(){
 
-    val viewmodel:PermissionViewModel = viewModel()
     val navController = rememberNavController()
     val drawerState = rememberDrawerState(DrawerValue.Closed)
     val scope = rememberCoroutineScope()
     var selectedItemIndex by remember { mutableStateOf(0) }
     ModalNavigationDrawer(
-
+        gesturesEnabled = false,
         drawerContent = {
             ModalDrawerSheet {
                 DrawerItem.entries.forEachIndexed { index, drawerItem ->

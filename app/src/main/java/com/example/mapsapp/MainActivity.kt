@@ -15,6 +15,7 @@ import androidx.lifecycle.ViewModel
 import com.example.mapsapp.ui.navigation.InternalNavigationWrapper
 import com.example.mapsapp.ui.navigation.MainNavigationWrapper
 import com.example.mapsapp.ui.screens.DrawerScreen
+import com.example.mapsapp.ui.screens.MapScreen
 import com.example.mapsapp.ui.screens.PermissionsScreen
 import com.example.mapsapp.ui.theme.MapsAppTheme
 import com.example.mapsapp.viewmodels.PermissionViewModel
