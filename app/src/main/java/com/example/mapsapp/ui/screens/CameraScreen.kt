@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.AlertDialog
@@ -59,27 +60,6 @@ fun CameraScreen(){
             }
         }
 
-    val launcher =
-        rememberLauncherForActivityResult(ActivityResultContracts.TakePicture()) { success ->
-            if (success && imageUri.value != null) {
-                val stream = context.contentResolver.openInputStream(imageUri.value!!)
-                bitmap.value = BitmapFactory.decodeStream(stream)
-            }
-        }
-
-
-    fun createImageUri(context: Context): Uri? {
-        val file = File.createTempFile("temp_image_", ".jpg", context.cacheDir).apply {
-            createNewFile()
-            deleteOnExit()
-        }
-        return FileProvider.getUriForFile(
-            context,
-            "${context.packageName}.fileprovider",
-            file
-        )
-
-    }
 
     if (showDialog) {
         AlertDialog(
@@ -108,26 +88,45 @@ fun CameraScreen(){
     }
 
 
-
-
-
-    Column(modifier = Modifier.fillMaxSize(), verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally) {
-        Button(onClick = {
-            val uri = createImageUri(context)
-            imageUri.value = uri
-            launcher.launch(uri!!)
-        }) {
-            Text("Abrir Cámara")
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(16.dp),
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Button(onClick = { showDialog = true }) {
+            Text("Abrir Cámara o Galería")
         }
+
         Spacer(modifier = Modifier.height(24.dp))
+
         bitmap.value?.let {
-            Image(bitmap = it.asImageBitmap(), contentDescription = null,
-                modifier = Modifier.size(300.dp).clip(RoundedCornerShape(12.dp)),contentScale = ContentScale.Crop)
+            Image(
+                bitmap = it.asImageBitmap(),
+                contentDescription = null,
+                modifier = Modifier
+                    .size(300.dp)
+                    .clip(RoundedCornerShape(16.dp)),
+                contentScale = ContentScale.Crop
+            )
         }
     }
 
 }
 
+
+fun createImageUri(context: Context): Uri? {
+    val file = File.createTempFile("temp_image_", ".jpg", context.cacheDir).apply {
+        createNewFile()
+        deleteOnExit()
+    }
+    return FileProvider.getUriForFile(
+        context,
+        "${context.packageName}.fileprovider",
+        file
+    )
+
+}
 
 
