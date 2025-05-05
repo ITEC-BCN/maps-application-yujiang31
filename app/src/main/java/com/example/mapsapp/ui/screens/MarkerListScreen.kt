@@ -26,6 +26,4 @@ fun ListScreen(){
 
     }
 
-
-
 }

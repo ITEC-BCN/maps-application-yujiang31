@@ -43,7 +43,7 @@ import java.io.File
 
 
 @Composable
-fun CreateMarkerScreen(onClick: () -> Unit){
+fun CreateMarkerScreen(coordinates : String, navigateBack: ()-> Unit){
 
 
     val context = LocalContext.current
@@ -171,9 +171,6 @@ fun CreateMarkerScreen(onClick: () -> Unit){
 
         Spacer(modifier = Modifier.height(24.dp))
 
-
-
-
         TextButton(onClick = {
             pickImageLauncher.launch("image/*")
         },
@@ -191,6 +188,18 @@ fun CreateMarkerScreen(onClick: () -> Unit){
                 color = Color.White
 
                 )
+        }
+
+        Spacer(modifier = Modifier.height(24.dp))
+
+        Button(
+            onClick = navigateBack,
+            colors = ButtonDefaults.buttonColors(
+                contentColor = Color.White,
+                containerColor = Color.Blue
+            )
+        ) {
+            Text("Go Back")
         }
 
 

@@ -11,6 +11,7 @@ composeBom = "2024.09.00"
 androidbrowserhelper = "2.6.0"
 composeNavigation = "2.8.9"
 serialization = "1.7.3"
+storage = "1.4.2"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -30,6 +31,7 @@ androidx-material3 = { group = "androidx.compose.material3", name = "material3" 
 androidbrowserhelper = { group = "com.google.androidbrowserhelper", name = "androidbrowserhelper", version.ref = "androidbrowserhelper" }
 navigation-compose = { module = "androidx.navigation:navigation-compose", version.ref = "composeNavigation" }
 kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "serialization"}
+androidx-storage = { group = "androidx.test.services", name = "storage", version.ref = "storage" }
 
 
 [plugins]
