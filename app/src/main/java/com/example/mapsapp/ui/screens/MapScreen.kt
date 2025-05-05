@@ -4,6 +4,8 @@ import android.util.Log
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.mapsapp.viewmodels.MainViewModel
@@ -20,7 +22,7 @@ import com.google.maps.android.compose.rememberCameraPositionState
 fun MapScreen(navigateToMarker:(coordinates:String) -> Unit){
 
     val myViewModel : MainViewModel = viewModel()
-    val clickedPosition by myViewModel.clickedPosition.
+    val clickedPosition by myViewModel.clickedPosition.collectAsState()
 
     Column(modifier = Modifier.fillMaxSize()) {
         val itb = LatLng(41.4534225, 2.1837151)

@@ -26,6 +26,7 @@ import androidx.compose.ui.unit.sp
 import com.example.mapsapp.R
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.AlertDialog
@@ -55,6 +56,7 @@ fun CreateMarkerScreen(coordinates : String, navigateBack: ()-> Unit){
     var showDialog by remember { mutableStateOf(false) }
 
 
+    // Variables para lanzar funciones de imagenes
     val launcher =
         rememberLauncherForActivityResult(ActivityResultContracts.TakePicture()) { success ->
             if (success && imageUri.value != null) {
@@ -82,6 +84,8 @@ fun CreateMarkerScreen(coordinates : String, navigateBack: ()-> Unit){
         }
 
 
+
+    // Mensaje de confirmacion antes de abrir la camara
     if (showDialog) {
         AlertDialog(
             onDismissRequest = { showDialog = false },
@@ -100,6 +104,9 @@ fun CreateMarkerScreen(coordinates : String, navigateBack: ()-> Unit){
         )
     }
 
+
+    // Crear url de la Imagen
+
     fun createImageUri(): Uri? {
         val file = File.createTempFile("temp_image_", ".jpg", context.cacheDir).apply {
             createNewFile()
@@ -114,9 +121,11 @@ fun CreateMarkerScreen(coordinates : String, navigateBack: ()-> Unit){
 
 
 
-    Column (modifier = Modifier.fillMaxSize(),
+    // Contenido principal
+
+    Column (modifier = Modifier.fillMaxSize().padding(top = 85.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center
+
     ){
 
         Text(
@@ -165,7 +174,7 @@ fun CreateMarkerScreen(coordinates : String, navigateBack: ()-> Unit){
         Spacer(modifier = Modifier.height(24.dp))
         bitmap.value?.let {
             Image(bitmap = it.asImageBitmap(), contentDescription = null,
-                modifier = Modifier.size(300.dp).clip(RoundedCornerShape(12.dp)),contentScale = ContentScale.Crop)
+                modifier = Modifier.size(150.dp).clip(RoundedCornerShape(12.dp)),contentScale = ContentScale.Crop)
         }
 
 
@@ -179,12 +188,11 @@ fun CreateMarkerScreen(coordinates : String, navigateBack: ()-> Unit){
                 containerColor = Color.Blue
             ),
             modifier = Modifier
-                .width(120.dp)
-                .height(50.dp)
+                .width(100.dp)
+                .height(40.dp)
         ) {
             Text(
                 "ADD",
-                fontSize = 20.sp,
                 color = Color.White
 
                 )
@@ -197,7 +205,10 @@ fun CreateMarkerScreen(coordinates : String, navigateBack: ()-> Unit){
             colors = ButtonDefaults.buttonColors(
                 contentColor = Color.White,
                 containerColor = Color.Blue
-            )
+            ),
+            modifier = Modifier
+                .width(100.dp)
+                .height(40.dp)
         ) {
             Text("Go Back")
         }
