@@ -53,19 +53,14 @@ fun ListScreen(navigateToDetail: (String) -> Unit){
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
-            Text("Create new student", fontSize = 28.sp, fontWeight = FontWeight.Bold)
-            TextField(value = studentName, onValueChange = { myViewModel.editMapsName(it) })
-            TextField(value = studentMark, onValueChange = { myViewModel.editMapsMark(it) })
-            Button(onClick = { myViewModel.insertNewMaps(studentName, studentMark) }) {
-                Text("Insert")
-            }
+
         }
         Text(
             "Students List",
             fontSize = 28.sp,
             fontWeight = FontWeight.Bold,
             modifier = Modifier.fillMaxWidth(),
-            textAlign = TextAlign.Center
+            textAlign = TextAlign.Left
         )
         LazyColumn(
             Modifier

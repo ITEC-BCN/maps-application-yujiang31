@@ -1,26 +1,51 @@
 package com.example.mapsapp.data
 
+import android.graphics.Bitmap
+import android.os.Build
+import androidx.annotation.RequiresApi
+import com.example.mapsapp.BuildConfig
 import io.github.jan.supabase.SupabaseClient
 import io.github.jan.supabase.createSupabaseClient
 import io.github.jan.supabase.postgrest.Postgrest
 import io.github.jan.supabase.postgrest.from
+import io.github.jan.supabase.storage.Storage
+import io.github.jan.supabase.storage.storage
+import java.time.format.DateTimeFormatter
+import java.time.LocalDateTime
 
 
-class MySupabaseClient (){
+
+class MySupabaseClient {
+
     lateinit var client: SupabaseClient
-    constructor(supabaseUrl: String, supabaseKey: String): this(){
+    lateinit var storage: Storage
+    private val supabaseUrl = BuildConfig.SUPABASE_URL
+    private val supabaseKey = BuildConfig.SUPABASE_KEY
+
+    constructor(){
         client = createSupabaseClient(
             supabaseUrl = supabaseUrl,
             supabaseKey = supabaseKey
         ){
             install(Postgrest)
-
+            install(Storage)
         }
 
+        storage = client.storage
     }
 
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    suspend fun uploadImage(imageFile: ByteArray): String {
+        val fechaHoraActual = LocalDateTime.now()
+        val formato = DateTimeFormatter.ofPattern("yyyyMMdd_HHmmss")
+        val imageName = storage.from("images").upload(path = "image_${fechaHoraActual.format(formato)}.png", data = imageFile)
+        return buildImageUrl(imageFileName = imageName.path)
+    }
+
+    fun buildImageUrl(imageFileName: String) = "${this.supabaseUrl}/storage/v1/object/public/images/${imageFileName}"
     suspend fun getAllMaps(): List<MapsApp> {
-        return client.from("MapsApp").select().decodeList<MapsApp>()
+        return client.from("Maps_app").select().decodeList<MapsApp>()
     }
 
 
@@ -36,11 +61,18 @@ class MySupabaseClient (){
     suspend fun insertMaps(student: MapsApp){
         client.from("Student").insert(student)
     }
-    suspend fun updateMaps(id: String, name: String, mark: Double){
+    suspend fun updateMaps(id: String, name: String, mark: Double, imagename:String, imageFile: ByteArray){
+        val imageName = storage.from("images").update(path = imagename, data = imageFile)
+
         client.from("MapsApp").update({
             set("name", name)
             set("mark", mark)
-        }) { filter { eq("id", id) } }
+            set("image", buildImageUrl(imageFileName = imageName.path))
+        }) {
+            filter {
+                eq("id", id)
+            }
+        }
     }
     suspend fun deleteMaps(id: String){
         client.from("MapsApp").delete{ filter { eq("id", id) } }
@@ -48,5 +80,10 @@ class MySupabaseClient (){
 
     //SQL operations
 
+
+    suspend fun deleteImage(imageName: String){
+        val imgName = imageName.removePrefix("https://aobflzinjcljzqpxpcxs.supabase.co/storage/v1/object/public/images/")
+        client.storage.from("images").delete(imgName)
+    }
 
 }

@@ -17,7 +17,10 @@ sealed class Destinations {
     object List : Destinations()
 
     @Serializable
-    data class MarkerCreation(val coordenadas : String)
+    data class MarkerCreation(val coordenadas : String):Destinations()
+
+    @Serializable
+    data class DetailMap(val coordenadas: String): Destinations()
 /*
     @Serializable
     data class MarkerDetails(val id : Int):Destinations

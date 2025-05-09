@@ -1,5 +1,8 @@
 package com.example.mapsapp.viewmodels
 
+import android.graphics.Bitmap
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -12,6 +15,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.io.ByteArrayOutputStream
 
 class MainViewModel: ViewModel() {
 
@@ -33,6 +37,8 @@ class MainViewModel: ViewModel() {
     val clickedPosition= _clickedPosition
 
 
+
+
     fun updateClickedPosition(latLng: LatLng) {
         _clickedPosition.value = latLng
     }
@@ -41,6 +47,10 @@ class MainViewModel: ViewModel() {
     val MapsName = _MapsName
     private val _MapsMark = MutableLiveData<String>()
     val MapsMark = _MapsMark
+
+
+
+
 
 
 
@@ -56,8 +66,8 @@ class MainViewModel: ViewModel() {
 
 
     // Crear un Nuevo Maps
-    fun insertNewMaps(name: String, mark: String) {
-        val newMaps = MapsApp(name = name, mark = mark.toDouble())
+    fun insertNewMaps(name: String, mark: String, image: String) {
+        val newMaps = MapsApp(name = name, mark = mark.toDouble(), image = image)
         CoroutineScope(Dispatchers.IO).launch {
             database.insertMaps(newMaps)
             database.getAllMaps()
@@ -65,10 +75,13 @@ class MainViewModel: ViewModel() {
     }
 
 
-    // Hacer modificaciones a un maps existente
-    fun updateMaps(id: String, name: String, mark: String){
+    fun updateMaps(id: String, name: String, mark: String, image: Bitmap?){
+        val stream = ByteArrayOutputStream()
+        image?.compress(Bitmap.CompressFormat.PNG, 0, stream)
+        val imageName = _selectedMaps?.image?.removePrefix("https://aobflzinjcljzqpxpcxs.supabase.co/storage/v1/object/public/images/")
         CoroutineScope(Dispatchers.IO).launch {
-            database.updateMaps(id, name, mark.toDouble())
+
+            database.updateMaps(id, name, mark.toDouble(), imageName.toString(), stream.toByteArray())
         }
     }
 
@@ -88,9 +101,10 @@ class MainViewModel: ViewModel() {
     }
 
 
-    fun deleteMaps(id: String){
+    fun deleteMaps(id: String, image: String){
         CoroutineScope(Dispatchers.IO).launch {
             database.deleteMaps(id)
+            database.deleteImage(image)
             getAllMaps()
         }
     }

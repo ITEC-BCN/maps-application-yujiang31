@@ -14,7 +14,9 @@ import com.example.mapsapp.ui.screens.ListScreen
 import com.example.mapsapp.ui.screens.MapScreen
 import com.example.mapsapp.ui.navigation.Destinations.List
 import com.example.mapsapp.ui.navigation.Destinations.MarkerCreation
+import com.example.mapsapp.ui.navigation.Destinations.DetailMap
 import com.example.mapsapp.ui.screens.CreateMarkerScreen
+import com.example.mapsapp.ui.screens.DetailMarkerScreen
 
 @SuppressLint("WrongNavigateRouteType")
 @Composable
@@ -28,7 +30,10 @@ fun InternalNavigationWrapper(navController: NavHostController, modifier: Modifi
         }
 
         composable<List> {
-            ListScreen()
+            ListScreen{maps ->
+                navController.navigate(DetailMap(maps))
+
+            }
         }
 
         composable<MarkerCreation> {backStackEntry ->
@@ -37,6 +42,15 @@ fun InternalNavigationWrapper(navController: NavHostController, modifier: Modifi
                 navController.popBackStack()
             }
         }
+
+        composable<DetailMap> { bacStackEntry ->
+            val pantallaMarker = bacStackEntry.toRoute<DetailMap>()
+            DetailMarkerScreen(pantallaMarker.coordenadas){
+                navController.popBackStack()
+            }
+
+        }
+
 
     }
 }

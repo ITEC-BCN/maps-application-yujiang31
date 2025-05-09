@@ -120,7 +120,6 @@ fun CreateMarkerScreen(coordinates : String, navigateBack: ()-> Unit){
     }
 
 
-
     // Contenido principal
 
     Column (modifier = Modifier.fillMaxSize().padding(top = 85.dp),
