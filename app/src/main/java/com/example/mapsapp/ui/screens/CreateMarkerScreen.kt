@@ -44,6 +44,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.core.content.FileProvider
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.mapsapp.viewmodels.CameraViewModel
 import com.example.mapsapp.viewmodels.MainViewModel
 import java.io.File
 
@@ -53,6 +54,7 @@ fun CreateMarkerScreen(coordenadas : String, navigateBack: ()-> Unit){
 
 
     val myViewModel = viewModel<MainViewModel>()
+    val CameraViewModel = viewModel<CameraViewModel>()
     val context = LocalContext.current
 
     val MapsName: String by myViewModel.MapsName.observeAsState("")
@@ -65,7 +67,7 @@ fun CreateMarkerScreen(coordenadas : String, navigateBack: ()-> Unit){
 
     val imagen: Painter = painterResource(id = R.drawable.camera_icon)
     var title by remember { mutableStateOf("") }
-    var description by remember { mutableStateOf(coordenadas) }
+    var description by remember { mutableStateOf("") }
     var showDialog by remember { mutableStateOf(false) }
 
 
@@ -162,7 +164,7 @@ fun CreateMarkerScreen(coordenadas : String, navigateBack: ()-> Unit){
 
         TextField(
             value = description,
-            onValueChange = {description = it},
+            onValueChange = {description= it},
             label = { Text("") }
         )
 
@@ -213,7 +215,9 @@ fun CreateMarkerScreen(coordenadas : String, navigateBack: ()-> Unit){
         Spacer(modifier = Modifier.height(24.dp))
 
         Button(
-            onClick = {myViewModel.insertNewMaps(name = MapsName, mark = MapsMark, image = MapsImage )},
+            onClick = {
+                myViewModel.
+                insertNewMaps(name = MapsName, mark = MapsMark, image = CameraViewModel.capturedImage.value  )},
             colors = ButtonDefaults.buttonColors(
                 contentColor = Color.White,
                 containerColor = Color.Cyan

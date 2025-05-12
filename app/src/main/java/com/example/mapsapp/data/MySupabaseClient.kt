@@ -43,6 +43,7 @@ class MySupabaseClient {
     }
 
     fun buildImageUrl(imageFileName: String) = "${this.supabaseUrl}/storage/v1/object/public/images/${imageFileName}"
+
     suspend fun getAllMaps(): List<MapsApp> {
         return client.from("Maps_app").select().decodeList<MapsApp>()
     }

@@ -16,6 +16,8 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.ByteArrayOutputStream
+import android.util.Log
+
 
 class MainViewModel: ViewModel() {
 
@@ -68,11 +70,14 @@ class MainViewModel: ViewModel() {
     // Crear un Nuevo Maps
     @RequiresApi(Build.VERSION_CODES.O)
     fun insertNewMaps(name: String, mark: String, image: Bitmap?) {
-        val stream = ByteArrayOutputStream()
-        image?.compress(Bitmap.CompressFormat.PNG, 0, stream)
         CoroutineScope(Dispatchers.IO).launch {
+            val stream = ByteArrayOutputStream()
+            image?.compress(Bitmap.CompressFormat.PNG, 0, stream)
+
+            Log.d("Yujiang", "image==null:${image== null}")
+            Log.d("Yujiang", "stream.size:${stream.size()}")
             val imageName = database.uploadImage(stream.toByteArray())
-            database.insertMaps(MapsApp(name = name, mark = mark, image = imageName))
+            database.insertMaps(MapsApp( name = name, mark = mark, image = imageName))
         }
 
     }
