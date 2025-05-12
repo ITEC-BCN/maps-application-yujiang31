@@ -16,9 +16,8 @@ import java.time.LocalDateTime
 
 
 class MySupabaseClient {
-
-    lateinit var client: SupabaseClient
     lateinit var storage: Storage
+    lateinit var client: SupabaseClient
     private val supabaseUrl = BuildConfig.SUPABASE_URL
     private val supabaseKey = BuildConfig.SUPABASE_KEY
 
@@ -59,8 +58,10 @@ class MySupabaseClient {
 
 
     suspend fun insertMaps(student: MapsApp){
-        client.from("Student").insert(student)
+        client.from("Maps").insert(student)
     }
+
+
     suspend fun updateMaps(id: String, name: String, mark: Double, imagename:String, imageFile: ByteArray){
         val imageName = storage.from("images").update(path = imagename, data = imageFile)
 

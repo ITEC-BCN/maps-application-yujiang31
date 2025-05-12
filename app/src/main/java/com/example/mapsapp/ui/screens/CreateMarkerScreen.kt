@@ -3,8 +3,10 @@ package com.example.mapsapp.ui.screens
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.net.Uri
+import android.os.Build
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -33,6 +35,7 @@ import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.TextButton
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
@@ -40,19 +43,29 @@ import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.core.content.FileProvider
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.mapsapp.viewmodels.MainViewModel
 import java.io.File
 
-
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun CreateMarkerScreen(coordinates : String, navigateBack: ()-> Unit){
+fun CreateMarkerScreen(coordenadas : String, navigateBack: ()-> Unit){
 
 
+    val myViewModel = viewModel<MainViewModel>()
     val context = LocalContext.current
+
+    val MapsName: String by myViewModel.MapsName.observeAsState("")
+    val MapsMark: String by myViewModel.MapsMark.observeAsState("")
+    val MapsImage : Bitmap? by myViewModel.Image.observeAsState()
+
     val imageUri = remember { mutableStateOf<Uri?>(null) }
     val bitmap = remember { mutableStateOf<Bitmap?>(null) }
+
+
     val imagen: Painter = painterResource(id = R.drawable.camera_icon)
     var title by remember { mutableStateOf("") }
-    var description by remember { mutableStateOf("") }
+    var description by remember { mutableStateOf(coordenadas) }
     var showDialog by remember { mutableStateOf(false) }
 
 
@@ -200,6 +213,21 @@ fun CreateMarkerScreen(coordinates : String, navigateBack: ()-> Unit){
         Spacer(modifier = Modifier.height(24.dp))
 
         Button(
+            onClick = {myViewModel.insertNewMaps(name = MapsName, mark = MapsMark, image = MapsImage )},
+            colors = ButtonDefaults.buttonColors(
+                contentColor = Color.White,
+                containerColor = Color.Cyan
+            ),
+            modifier = Modifier
+                .width(100.dp)
+                .height(40.dp)
+        ) {
+            Text("Create")
+        }
+
+        Spacer(modifier = Modifier.height(24.dp))
+
+        Button(
             onClick = navigateBack,
             colors = ButtonDefaults.buttonColors(
                 contentColor = Color.White,
@@ -211,9 +239,6 @@ fun CreateMarkerScreen(coordinates : String, navigateBack: ()-> Unit){
         ) {
             Text("Go Back")
         }
-
-
-
 
 
     }

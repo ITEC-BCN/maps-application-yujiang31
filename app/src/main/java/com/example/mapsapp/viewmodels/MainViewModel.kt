@@ -36,20 +36,20 @@ class MainViewModel: ViewModel() {
     val _clickedPosition = MutableStateFlow<LatLng?>(null)
     val clickedPosition= _clickedPosition
 
+    // Variables guardar Datos del Marcador
+    private val _MapsName = MutableLiveData<String>()
+    val MapsName = _MapsName
 
+    private val _MapsMark = MutableLiveData<String>()
+    val MapsMark = _MapsMark
+
+    private val _Image = MutableLiveData<Bitmap?>()
+    val Image = _Image
 
 
     fun updateClickedPosition(latLng: LatLng) {
         _clickedPosition.value = latLng
     }
-
-    private val _MapsName = MutableLiveData<String>()
-    val MapsName = _MapsName
-    private val _MapsMark = MutableLiveData<String>()
-    val MapsMark = _MapsMark
-
-
-
 
 
 
@@ -66,12 +66,15 @@ class MainViewModel: ViewModel() {
 
 
     // Crear un Nuevo Maps
-    fun insertNewMaps(name: String, mark: String, image: String) {
-        val newMaps = MapsApp(name = name, mark = mark.toDouble(), image = image)
+    @RequiresApi(Build.VERSION_CODES.O)
+    fun insertNewMaps(name: String, mark: String, image: Bitmap?) {
+        val stream = ByteArrayOutputStream()
+        image?.compress(Bitmap.CompressFormat.PNG, 0, stream)
         CoroutineScope(Dispatchers.IO).launch {
-            database.insertMaps(newMaps)
-            database.getAllMaps()
+            val imageName = database.uploadImage(stream.toByteArray())
+            database.insertMaps(MapsApp(name = name, mark = mark, image = imageName))
         }
+
     }
 
 

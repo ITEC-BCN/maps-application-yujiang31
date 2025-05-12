@@ -73,7 +73,7 @@ fun ListScreen(navigateToDetail: (String) -> Unit){
                 val dissmissState = rememberSwipeToDismissBoxState(
                     confirmValueChange = {
                         if (it == SwipeToDismissBoxValue.EndToStart) {
-                            myViewModel.deleteMaps(Maps.id.toString())
+                            myViewModel.deleteMaps(Maps.id.toString(), "")
                             true
                         } else {
                             false

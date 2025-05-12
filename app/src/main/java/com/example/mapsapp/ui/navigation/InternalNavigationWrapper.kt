@@ -1,6 +1,8 @@
 package com.example.mapsapp.ui.navigation
 
 import android.annotation.SuppressLint
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavController
@@ -18,6 +20,7 @@ import com.example.mapsapp.ui.navigation.Destinations.DetailMap
 import com.example.mapsapp.ui.screens.CreateMarkerScreen
 import com.example.mapsapp.ui.screens.DetailMarkerScreen
 
+@RequiresApi(Build.VERSION_CODES.O)
 @SuppressLint("WrongNavigateRouteType")
 @Composable
 fun InternalNavigationWrapper(navController: NavHostController, modifier: Modifier){
@@ -43,12 +46,15 @@ fun InternalNavigationWrapper(navController: NavHostController, modifier: Modifi
             }
         }
 
-        composable<DetailMap> { bacStackEntry ->
-            val pantallaMarker = bacStackEntry.toRoute<DetailMap>()
-            DetailMarkerScreen(pantallaMarker.coordenadas){
-                navController.popBackStack()
-            }
-
+        composable<DetailMap> { backStackEntry ->
+            val pantallaMarker = backStackEntry.toRoute<DetailMap>()
+            DetailMarkerScreen(
+                id = pantallaMarker.coordenadas,
+                navigateBack = { navController.popBackStack() },
+                navigateCMarker =  { coordenadas ->
+                    navController.navigate(MarkerCreation(coordenadas))
+                }
+            )
         }
 
 

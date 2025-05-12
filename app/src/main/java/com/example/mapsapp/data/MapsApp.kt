@@ -5,9 +5,9 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class MapsApp (
-    val id :Int? = null,
+    val id :Int? = 0,
     val name :String,
-    val mark:Double,
+    val mark:String,
     val image: String
 )
 
