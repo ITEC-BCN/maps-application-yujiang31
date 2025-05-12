@@ -57,9 +57,10 @@ fun CreateMarkerScreen(coordenadas : String, navigateBack: ()-> Unit){
     val CameraViewModel = viewModel<CameraViewModel>()
     val context = LocalContext.current
 
+
     val MapsName: String by myViewModel.MapsName.observeAsState("")
     val MapsMark: String by myViewModel.MapsMark.observeAsState("")
-    val MapsImage : Bitmap? by myViewModel.Image.observeAsState()
+
 
     val imageUri = remember { mutableStateOf<Uri?>(null) }
     val bitmap = remember { mutableStateOf<Bitmap?>(null) }
