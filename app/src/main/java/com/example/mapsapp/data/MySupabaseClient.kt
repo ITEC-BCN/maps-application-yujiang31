@@ -59,11 +59,11 @@ class MySupabaseClient {
 
 
     suspend fun insertMaps(student: MapsApp){
-        client.from("Maps").insert(student)
+        client.from("maps").insert(student)
     }
 
 
-    suspend fun updateMaps(id: String, name: String, mark: Double, imagename:String, imageFile: ByteArray){
+    suspend fun updateMaps(id: String, name: String, mark: String, imagename:String, imageFile: ByteArray){
         val imageName = storage.from("images").update(path = imagename, data = imageFile)
 
         client.from("MapsApp").update({

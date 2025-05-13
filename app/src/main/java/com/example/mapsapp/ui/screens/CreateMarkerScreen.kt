@@ -4,6 +4,7 @@ import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Build
+import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
@@ -223,6 +224,7 @@ fun CreateMarkerScreen(coordenadas : String, navigateBack: ()-> Unit){
 
         Button(
             onClick = {
+                Log.d("Yujiang", "Create pressed with title=$title, description=$description")
                 myViewModel.
                 insertNewMaps(name = title, mark = description, image = CameraViewModel.capturedImage.value)},
             colors = ButtonDefaults.buttonColors(

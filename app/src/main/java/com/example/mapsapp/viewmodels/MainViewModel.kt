@@ -74,6 +74,8 @@ class MainViewModel: ViewModel() {
             val stream = ByteArrayOutputStream()
             image?.compress(Bitmap.CompressFormat.PNG, 0, stream)
 
+            Log.d("Yujiang", "name==null:${name}")
+            Log.d("Yujiang", "mark/description==null:${mark}")
             Log.d("Yujiang", "image==null:${image== null}")
             Log.d("Yujiang", "stream.size:${stream.size()}")
             val imageName = database.uploadImage(stream.toByteArray())
@@ -89,7 +91,7 @@ class MainViewModel: ViewModel() {
         val imageName = _selectedMaps?.image?.removePrefix("https://aobflzinjcljzqpxpcxs.supabase.co/storage/v1/object/public/images/")
         CoroutineScope(Dispatchers.IO).launch {
 
-            database.updateMaps(id, name, mark.toDouble(), imageName.toString(), stream.toByteArray())
+            database.updateMaps(id, name, mark, imageName.toString(), stream.toByteArray())
         }
     }
 
