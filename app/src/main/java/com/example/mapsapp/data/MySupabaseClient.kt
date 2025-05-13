@@ -45,12 +45,12 @@ class MySupabaseClient {
     fun buildImageUrl(imageFileName: String) = "${this.supabaseUrl}/storage/v1/object/public/images/${imageFileName}"
 
     suspend fun getAllMaps(): List<MapsApp> {
-        return client.from("Maps_app").select().decodeList<MapsApp>()
+        return client.from("maps").select().decodeList<MapsApp>()
     }
 
 
     suspend fun getMaps(id: String): MapsApp{
-        return client.from("MapsApp").select {
+        return client.from("maps").select {
             filter {
                 eq("id", id)
             }
@@ -66,7 +66,7 @@ class MySupabaseClient {
     suspend fun updateMaps(id: String, name: String, mark: String, imagename:String, imageFile: ByteArray){
         val imageName = storage.from("images").update(path = imagename, data = imageFile)
 
-        client.from("MapsApp").update({
+        client.from("maps").update({
             set("name", name)
             set("mark", mark)
             set("image", buildImageUrl(imageFileName = imageName.path))
@@ -77,7 +77,7 @@ class MySupabaseClient {
         }
     }
     suspend fun deleteMaps(id: String){
-        client.from("MapsApp").delete{ filter { eq("id", id) } }
+        client.from("maps").delete{ filter { eq("id", id) } }
     }
 
     //SQL operations
