@@ -189,6 +189,7 @@ fun CreateMarkerScreen(coordenadas : String, navigateBack: ()-> Unit){
         )
 
         Spacer(modifier = Modifier.height(24.dp))
+
         bitmap.value?.let {
             Image(bitmap = it.asImageBitmap(), contentDescription = null,
                 modifier = Modifier.size(150.dp).clip(RoundedCornerShape(12.dp)),contentScale = ContentScale.Crop)
