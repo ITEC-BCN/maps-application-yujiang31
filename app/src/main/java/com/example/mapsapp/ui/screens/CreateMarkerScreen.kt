@@ -74,9 +74,12 @@ fun CreateMarkerScreen(coordenadas : String, navigateBack: ()-> Unit){
         rememberLauncherForActivityResult(ActivityResultContracts.TakePicture()) { success ->
             if (success && imageUri.value != null) {
                 val stream = context.contentResolver.openInputStream(imageUri.value!!)
-                bitmap.value = BitmapFactory.decodeStream(stream)
+                val bmp = BitmapFactory.decodeStream(stream)
+                bitmap.value = bmp
+                CameraViewModel.setImage(bmp)
             }
         }
+
 
 
     val pickImageLauncher =
