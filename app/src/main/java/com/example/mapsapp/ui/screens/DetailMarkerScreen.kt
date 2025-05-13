@@ -2,6 +2,7 @@ package com.example.mapsapp.ui.screens
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.width
@@ -28,19 +29,29 @@ fun DetailMarkerScreen(id:String, navigateBack:() -> Unit, navigateCMarker:(Stri
     myViewModel.getMaps(id)
     val studentName: String by myViewModel.MapsName.observeAsState("")
     val studentMark: String by myViewModel.MapsMark.observeAsState("")
+
     Column(
+
         Modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
+
     ) {
+
+
         TextField(value = studentName, onValueChange = { myViewModel.editMapsName(it) })
+        Spacer(modifier = Modifier.height(16.dp))
+
         TextField(value = studentMark, onValueChange = { myViewModel.editMapsMark(it) })
+        Spacer(modifier = Modifier.height(16.dp))
+
         Button(onClick = {
             myViewModel.updateMaps(id, studentName, studentMark, null)
-            navigateBack()
         }) {
             Text("Update")
         }
+
+        Spacer(modifier = Modifier.height(16.dp))
 
         TextButton(
             onClick = {
@@ -57,6 +68,32 @@ fun DetailMarkerScreen(id:String, navigateBack:() -> Unit, navigateCMarker:(Stri
 
             Text(
                 "Create New Marker",
+                color = Color.White
+
+            )
+
+        }
+
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        TextButton(
+
+            onClick = {
+                navigateBack()},
+
+            colors = ButtonDefaults.buttonColors(
+                contentColor = Color.White,
+                containerColor = Color.Blue
+            ),
+            modifier = Modifier
+                .width(100.dp)
+                .height(40.dp)
+
+        ) {
+
+            Text(
+                "Go Back",
                 color = Color.White
 
             )

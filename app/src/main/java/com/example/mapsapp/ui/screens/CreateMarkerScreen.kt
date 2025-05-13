@@ -66,6 +66,7 @@ fun CreateMarkerScreen(coordenadas: String, navigateBack: () -> Unit) {
     var description by remember { mutableStateOf("") }
     var showDialog by remember { mutableStateOf(false) }
 
+
     val pickImageLauncher =
         rememberLauncherForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
             uri?.let {
@@ -101,18 +102,22 @@ fun CreateMarkerScreen(coordenadas: String, navigateBack: () -> Unit) {
 
     // UI
     Column(
+
         modifier = Modifier.fillMaxSize().padding(top = 85.dp),
-        horizontalAlignment = Alignment.CenterHorizontally,
+        horizontalAlignment = Alignment.CenterHorizontally
+
     ) {
+
         Text("Title", fontSize = 24.sp)
         Spacer(modifier = Modifier.height(15.dp))
-        TextField(value = title, onValueChange = { title = it }, label = { Text("") })
 
+        TextField(value = title, onValueChange = { title = it }, label = { Text("") })
         Spacer(modifier = Modifier.height(34.dp))
+
         Text("Descripcion", fontSize = 24.sp)
         Spacer(modifier = Modifier.height(15.dp))
-        TextField(value = description, onValueChange = { description = it }, label = { Text("") })
 
+        TextField(value = description, onValueChange = { description = it }, label = { Text("") })
         Spacer(modifier = Modifier.height(24.dp))
 
         // Mostrar solo si no hay imagen aún

@@ -7,15 +7,19 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
+import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.SwipeToDismissBox
 import androidx.compose.material3.SwipeToDismissBoxValue
 import androidx.compose.material3.Text
@@ -26,12 +30,15 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import coil.compose.AsyncImage
 import com.example.mapsapp.data.MapsApp
 import com.example.mapsapp.viewmodels.MainViewModel
 
@@ -43,6 +50,8 @@ fun ListScreen(navigateToDetail: (String) -> Unit){
     myViewModel.getAllMaps()
     val studentName: String by myViewModel.MapsName.observeAsState("")
     val studentMark: String by myViewModel.MapsMark.observeAsState("")
+
+
     Column(
         Modifier
             .fillMaxWidth(),
@@ -61,39 +70,52 @@ fun ListScreen(navigateToDetail: (String) -> Unit){
 
 
         LazyColumn(
-            Modifier
+            modifier = Modifier
                 .fillMaxWidth()
                 .weight(0.6f)
+                .padding(top = 20.dp)
+                .padding(horizontal = 12.dp),
+            verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
-
-            items(MapsList){Maps ->
-
-                val dissmissState = rememberSwipeToDismissBoxState(
-                    confirmValueChange = {
-                        if (it == SwipeToDismissBoxValue.EndToStart) {
-                            myViewModel.deleteMaps(Maps.id.toString())
-                            true
-                        } else {
-                            false
-                        }
-                    }
-                )
-                SwipeToDismissBox(state = dissmissState, backgroundContent = {
+            if (MapsList.isEmpty()) {
+                // Animación de carga cuando no hay datos
+                items(5) {
                     Box(
-                        Modifier
-                            .fillMaxSize()
-                            .background(Color.Red)
-                            .padding(horizontal = 20.dp),
-                        contentAlignment = Alignment.BottomEnd
-                    ) {
-                        Icon(imageVector = Icons.Default.Delete, contentDescription = "Delete")
-                    }
-                }) {
-                    MapsItem(Maps) { navigateToDetail(Maps.id.toString()) }
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(120.dp)
+                            .background(Color.LightGray, shape = RoundedCornerShape(16.dp))
+                            .padding(16.dp)
+                    )
                 }
-
+            } else {
+                items(MapsList) { Maps ->
+                    val dismissState = rememberSwipeToDismissBoxState(
+                        confirmValueChange = {
+                            if (it == SwipeToDismissBoxValue.EndToStart) {
+                                myViewModel.deleteMaps(Maps.id.toString())
+                                true
+                            } else false
+                        }
+                    )
+                    SwipeToDismissBox(
+                        state = dismissState,
+                        backgroundContent = {
+                            Box(
+                                Modifier
+                                    .fillMaxSize()
+                                    .background(Color.Red, shape = RoundedCornerShape(16.dp))
+                                    .padding(end = 20.dp),
+                                contentAlignment = Alignment.CenterEnd
+                            ) {
+                                Icon(imageVector = Icons.Default.Delete, contentDescription = "Delete")
+                            }
+                        }
+                    ) {
+                        MapsItem(Maps = Maps, navigateToDetail = { navigateToDetail(Maps.id.toString()) })
+                    }
+                }
             }
-
         }
     }
 
@@ -104,15 +126,33 @@ fun ListScreen(navigateToDetail: (String) -> Unit){
 fun MapsItem(Maps: MapsApp, navigateToDetail: (String) -> Unit) {
     Box(
         modifier = Modifier
-            .fillMaxWidth().background(Color.LightGray).border(width = 2.dp, Color.DarkGray)
-            .clickable { navigateToDetail(Maps.id.toString()) }) {
+            .fillMaxWidth()
+            .height(120.dp)
+            .clickable { navigateToDetail(Maps.id.toString()) }
+            .background(Color.DarkGray, shape = RoundedCornerShape(16.dp))
+            .border(1.dp, Color.Gray, shape = RoundedCornerShape(16.dp))
+            .padding(8.dp)
+    ) {
         Row(
-            Modifier.fillMaxWidth(),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.Center
+            modifier = Modifier.fillMaxSize()
         ) {
-            Text(Maps.name, fontSize = 28.sp, fontWeight = FontWeight.Bold)
-            Text(text = "Mark: ${Maps.mark}")
+            AsyncImage(
+                model = Maps.image,
+                contentDescription = Maps.name,
+                contentScale = ContentScale.Crop,
+                modifier = Modifier
+                    .weight(1f)
+                    .fillMaxHeight()
+                    .clip(RoundedCornerShape(12.dp))
+            )
+            Column(
+                modifier = Modifier
+                    .weight(1f)
+                    .padding(start = 12.dp),
+                verticalArrangement = Arrangement.Center
+            ) {
+                Text(text = Maps.name, fontSize = 20.sp, fontWeight = FontWeight.Bold, color = Color.Black, modifier = Modifier.padding(10.dp))
+            }
         }
     }
 }
