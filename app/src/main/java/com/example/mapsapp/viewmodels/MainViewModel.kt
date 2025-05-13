@@ -111,10 +111,9 @@ class MainViewModel: ViewModel() {
     }
 
 
-    fun deleteMaps(id: String, image: String){
+    fun deleteMaps(id: String){
         CoroutineScope(Dispatchers.IO).launch {
             database.deleteMaps(id)
-            database.deleteImage(image)
             getAllMaps()
         }
     }

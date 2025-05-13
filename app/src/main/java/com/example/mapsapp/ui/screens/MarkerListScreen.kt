@@ -44,24 +44,22 @@ fun ListScreen(navigateToDetail: (String) -> Unit){
     val studentName: String by myViewModel.MapsName.observeAsState("")
     val studentMark: String by myViewModel.MapsMark.observeAsState("")
     Column(
-        Modifier.fillMaxSize()
+        Modifier
+            .fillMaxWidth(),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center
     ) {
-        Column(
-            Modifier
-                .fillMaxWidth()
-                .weight(0.4f),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center
-        ) {
 
-        }
+
         Text(
-            "Students List",
+            "Maps List",
             fontSize = 28.sp,
             fontWeight = FontWeight.Bold,
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier.fillMaxWidth().padding(24.dp),
             textAlign = TextAlign.Left
         )
+
+
         LazyColumn(
             Modifier
                 .fillMaxWidth()
@@ -73,7 +71,7 @@ fun ListScreen(navigateToDetail: (String) -> Unit){
                 val dissmissState = rememberSwipeToDismissBoxState(
                     confirmValueChange = {
                         if (it == SwipeToDismissBoxValue.EndToStart) {
-                            myViewModel.deleteMaps(Maps.id.toString(), "")
+                            myViewModel.deleteMaps(Maps.id.toString())
                             true
                         } else {
                             false
