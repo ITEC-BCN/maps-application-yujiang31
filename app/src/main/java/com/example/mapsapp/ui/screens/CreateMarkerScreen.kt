@@ -58,9 +58,6 @@ fun CreateMarkerScreen(coordenadas : String, navigateBack: ()-> Unit){
     val context = LocalContext.current
 
 
-    val MapsName: String by myViewModel.MapsName.observeAsState("")
-    val MapsMark: String by myViewModel.MapsMark.observeAsState("")
-
 
     val imageUri = remember { mutableStateOf<Uri?>(null) }
     val bitmap = remember { mutableStateOf<Bitmap?>(null) }
@@ -87,15 +84,20 @@ fun CreateMarkerScreen(coordenadas : String, navigateBack: ()-> Unit){
             uri?.let {
                 imageUri.value = it
                 val stream = context.contentResolver.openInputStream(it)
-                bitmap.value = BitmapFactory.decodeStream(stream)
+                val bmp = BitmapFactory.decodeStream(stream)
+                bitmap.value = bmp
+                CameraViewModel.setImage(bmp)
             }
         }
+
 
     val takePictureLauncher =
         rememberLauncherForActivityResult(ActivityResultContracts.TakePicture()) { success ->
             if (success && imageUri.value != null) {
                 val stream = context.contentResolver.openInputStream(imageUri.value!!)
-                bitmap.value = BitmapFactory.decodeStream(stream)
+                val bmp = BitmapFactory.decodeStream(stream)
+                bitmap.value = bmp
+                CameraViewModel.setImage(bmp)
             }
         }
 
@@ -218,7 +220,7 @@ fun CreateMarkerScreen(coordenadas : String, navigateBack: ()-> Unit){
         Button(
             onClick = {
                 myViewModel.
-                insertNewMaps(name = MapsName, mark = MapsMark, image = CameraViewModel.capturedImage.value  )},
+                insertNewMaps(name = title, mark = description, image = CameraViewModel.capturedImage.value)},
             colors = ButtonDefaults.buttonColors(
                 contentColor = Color.White,
                 containerColor = Color.Cyan

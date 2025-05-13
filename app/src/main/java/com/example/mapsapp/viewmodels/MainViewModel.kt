@@ -102,7 +102,7 @@ class MainViewModel: ViewModel() {
                 withContext(Dispatchers.Main) {
                     _selectedMaps = Maps
                     _MapsName.value = Maps.name
-                    _MapsMark.value = Maps.mark.toString()
+                    _MapsMark.value = Maps.mark
                 }
             }
         }
