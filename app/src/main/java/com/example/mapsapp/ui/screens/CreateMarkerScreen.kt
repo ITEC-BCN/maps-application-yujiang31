@@ -49,39 +49,22 @@ import com.example.mapsapp.viewmodels.CameraViewModel
 import com.example.mapsapp.viewmodels.MainViewModel
 import java.io.File
 
+import android.widget.Toast
+
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun CreateMarkerScreen(coordenadas : String, navigateBack: ()-> Unit){
-
-
+fun CreateMarkerScreen(coordenadas: String, navigateBack: () -> Unit) {
     val myViewModel = viewModel<MainViewModel>()
-    val CameraViewModel = viewModel<CameraViewModel>()
+    val cameraViewModel = viewModel<CameraViewModel>()
     val context = LocalContext.current
-
-
 
     val imageUri = remember { mutableStateOf<Uri?>(null) }
     val bitmap = remember { mutableStateOf<Bitmap?>(null) }
-
 
     val imagen: Painter = painterResource(id = R.drawable.camera_icon)
     var title by remember { mutableStateOf("") }
     var description by remember { mutableStateOf("") }
     var showDialog by remember { mutableStateOf(false) }
-
-
-    // Variables para lanzar funciones de imagenes
-    val launcher =
-        rememberLauncherForActivityResult(ActivityResultContracts.TakePicture()) { success ->
-            if (success && imageUri.value != null) {
-                val stream = context.contentResolver.openInputStream(imageUri.value!!)
-                val bmp = BitmapFactory.decodeStream(stream)
-                bitmap.value = bmp
-                CameraViewModel.setImage(bmp)
-            }
-        }
-
-
 
     val pickImageLauncher =
         rememberLauncherForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
@@ -90,10 +73,9 @@ fun CreateMarkerScreen(coordenadas : String, navigateBack: ()-> Unit){
                 val stream = context.contentResolver.openInputStream(it)
                 val bmp = BitmapFactory.decodeStream(stream)
                 bitmap.value = bmp
-                CameraViewModel.setImage(bmp)
+                cameraViewModel.setImage(bmp)
             }
         }
-
 
     val takePictureLauncher =
         rememberLauncherForActivityResult(ActivityResultContracts.TakePicture()) { success ->
@@ -101,33 +83,9 @@ fun CreateMarkerScreen(coordenadas : String, navigateBack: ()-> Unit){
                 val stream = context.contentResolver.openInputStream(imageUri.value!!)
                 val bmp = BitmapFactory.decodeStream(stream)
                 bitmap.value = bmp
-                CameraViewModel.setImage(bmp)
+                cameraViewModel.setImage(bmp)
             }
         }
-
-
-
-    // Mensaje de confirmacion antes de abrir la camara
-    if (showDialog) {
-        AlertDialog(
-            onDismissRequest = { showDialog = false },
-            title = { Text("Abrir Camara") },
-            text = { Text("¿Quieres abrir la camara para tomar una foto?") },
-            confirmButton = {
-                TextButton(onClick = {
-                    showDialog = false
-                    val uri = createImageUri(context)
-                    imageUri.value = uri
-                    takePictureLauncher.launch(uri!!)
-                }) {
-                    Text("Tomar Foto")
-                }
-            }
-        )
-    }
-
-
-    // Crear url de la Imagen
 
     fun createImageUri(): Uri? {
         val file = File.createTempFile("temp_image_", ".jpg", context.cacheDir).apply {
@@ -141,99 +99,79 @@ fun CreateMarkerScreen(coordenadas : String, navigateBack: ()-> Unit){
         )
     }
 
-
-    // Contenido principal
-
-    Column (modifier = Modifier.fillMaxSize().padding(top = 85.dp),
-            horizontalAlignment = Alignment.CenterHorizontally,
-
-    ){
-
-        Text(
-            "Title",
-            fontSize = 24.sp
-
-        )
+    // UI
+    Column(
+        modifier = Modifier.fillMaxSize().padding(top = 85.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+    ) {
+        Text("Title", fontSize = 24.sp)
         Spacer(modifier = Modifier.height(15.dp))
-        TextField(
-            value = title,
-            onValueChange = {title = it},
-            label = { Text("") }
-        )
+        TextField(value = title, onValueChange = { title = it }, label = { Text("") })
 
         Spacer(modifier = Modifier.height(34.dp))
-        Text(
-            "Descripcion",
-            fontSize = 24.sp
-        )
-
+        Text("Descripcion", fontSize = 24.sp)
         Spacer(modifier = Modifier.height(15.dp))
-
-        TextField(
-            value = description,
-            onValueChange = {description= it},
-            label = { Text("") }
-        )
-
+        TextField(value = description, onValueChange = { description = it }, label = { Text("") })
 
         Spacer(modifier = Modifier.height(24.dp))
 
+        // Mostrar solo si no hay imagen aún
+        if (bitmap.value == null) {
+            Image(
+                painter = imagen,
+                contentDescription = "Camera Icon",
+                modifier = Modifier
+                    .size(48.dp)
+                    .clickable {
+                        showDialog = true
+                    }
+            )
 
+            Spacer(modifier = Modifier.height(16.dp))
 
-        Image(
-            painter = imagen,
-            contentDescription = "Camera Icon",
-            modifier = Modifier
-                .size(48.dp)
-                .clickable {
-                    val uri = createImageUri(context)
-                    imageUri.value = uri
-                    launcher.launch(uri!!)
-                }
-        )
+            TextButton(
+                onClick = { pickImageLauncher.launch("image/*") },
+                colors = ButtonDefaults.buttonColors(
+                    contentColor = Color.White,
+                    containerColor = Color.Blue
+                ),
+                modifier = Modifier.width(100.dp).height(40.dp)
+            ) {
+                Text("ADD", color = Color.White)
+            }
+        }
 
         Spacer(modifier = Modifier.height(24.dp))
 
         bitmap.value?.let {
-            Image(bitmap = it.asImageBitmap(), contentDescription = null,
-                modifier = Modifier.size(150.dp).clip(RoundedCornerShape(12.dp)),contentScale = ContentScale.Crop)
+            Image(
+                bitmap = it.asImageBitmap(),
+                contentDescription = null,
+                modifier = Modifier.size(150.dp).clip(RoundedCornerShape(12.dp)),
+                contentScale = ContentScale.Crop
+            )
         }
 
-
-        Spacer(modifier = Modifier.height(24.dp))
-
-        TextButton(onClick = {
-            pickImageLauncher.launch("image/*")
-        },
-            colors = ButtonDefaults.buttonColors(
-                contentColor = Color.White,
-                containerColor = Color.Blue
-            ),
-            modifier = Modifier
-                .width(100.dp)
-                .height(40.dp)
-        ) {
-            Text(
-                "ADD",
-                color = Color.White
-
-                )
-        }
-
-        Spacer(modifier = Modifier.height(24.dp))
 
         Button(
             onClick = {
-                Log.d("Yujiang", "Create pressed with title=$title, description=$description")
-                myViewModel.
-                insertNewMaps(name = title, mark = description, image = CameraViewModel.capturedImage.value)},
+                myViewModel.insertNewMaps(title, description, cameraViewModel.capturedImage.value)
+
+                // Limpiar campos
+                title = ""
+                description = ""
+                bitmap.value = null
+                // Set a null la imagen
+                cameraViewModel.setImage(Bitmap.createBitmap(1, 1, Bitmap.Config.ARGB_8888))
+
+                // Mostrar Toast
+                Toast.makeText(context, "¡Marcador añadido correctamente!", Toast.LENGTH_SHORT).show()
+            },
             colors = ButtonDefaults.buttonColors(
                 contentColor = Color.White,
                 containerColor = Color.Cyan
             ),
-            modifier = Modifier
-                .width(100.dp)
-                .height(40.dp)
+            modifier = Modifier.width(100.dp).height(40.dp)
         ) {
             Text("Create")
         }
@@ -246,15 +184,28 @@ fun CreateMarkerScreen(coordenadas : String, navigateBack: ()-> Unit){
                 contentColor = Color.White,
                 containerColor = Color.Blue
             ),
-            modifier = Modifier
-                .width(100.dp)
-                .height(40.dp)
+            modifier = Modifier.width(100.dp).height(40.dp)
         ) {
             Text("Go Back")
         }
-
-
     }
 
-
+    // Dialog para tomar foto
+    if (showDialog) {
+        AlertDialog(
+            onDismissRequest = { showDialog = false },
+            title = { Text("Abrir Camara") },
+            text = { Text("¿Quieres abrir la camara para tomar una foto?") },
+            confirmButton = {
+                TextButton(onClick = {
+                    showDialog = false
+                    val uri = createImageUri()
+                    imageUri.value = uri
+                    takePictureLauncher.launch(uri!!)
+                }) {
+                    Text("Tomar Foto")
+                }
+            }
+        )
+    }
 }
