@@ -53,7 +53,8 @@ import android.widget.Toast
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun CreateMarkerScreen(coordenadas: String, navigateBack: () -> Unit) {
+fun CreateMarkerScreen(lat: Double, lng: Double, navigateBack: () -> Unit) {
+
     val myViewModel = viewModel<MainViewModel>()
     val cameraViewModel = viewModel<CameraViewModel>()
     val context = LocalContext.current
@@ -160,7 +161,7 @@ fun CreateMarkerScreen(coordenadas: String, navigateBack: () -> Unit) {
 
         Button(
             onClick = {
-                myViewModel.insertNewMaps(title, description, cameraViewModel.capturedImage.value)
+                myViewModel.insertNewMaps(title, description, cameraViewModel.capturedImage.value, lat, lng)
 
                 // Limpiar campos
                 title = ""

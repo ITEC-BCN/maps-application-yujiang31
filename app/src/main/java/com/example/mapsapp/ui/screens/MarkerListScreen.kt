@@ -1,5 +1,6 @@
 package com.example.mapsapp.ui.screens
 
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -41,6 +42,10 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
 import com.example.mapsapp.data.MapsApp
 import com.example.mapsapp.viewmodels.MainViewModel
+import androidx.compose.material3.SwipeToDismissBox
+import androidx.compose.material3.rememberSwipeToDismissBoxState
+import androidx.compose.ui.platform.LocalContext
+
 
 @Composable
 fun ListScreen(navigateToDetail: (String) -> Unit){
@@ -48,6 +53,7 @@ fun ListScreen(navigateToDetail: (String) -> Unit){
     val myViewModel = viewModel<MainViewModel>()
     val MapsList by myViewModel.MapsList.observeAsState(emptyList<MapsApp>())
     myViewModel.getAllMaps()
+    val context = LocalContext.current
     val studentName: String by myViewModel.MapsName.observeAsState("")
     val studentMark: String by myViewModel.MapsMark.observeAsState("")
 
@@ -89,11 +95,16 @@ fun ListScreen(navigateToDetail: (String) -> Unit){
                     )
                 }
             } else {
-                items(MapsList) { Maps ->
+                items(MapsList, key = {it.id?:it.hashCode()}) { Maps ->
                     val dismissState = rememberSwipeToDismissBoxState(
                         confirmValueChange = {
                             if (it == SwipeToDismissBoxValue.EndToStart) {
                                 myViewModel.deleteMaps(Maps.id.toString())
+                                Toast.makeText(
+                                    context,
+                                    "Ubicacion eliminada: ${Maps.name}",
+                                    Toast.LENGTH_SHORT
+                                ).show()
                                 true
                             } else false
                         }

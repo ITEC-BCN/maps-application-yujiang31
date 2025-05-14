@@ -5,6 +5,7 @@ import android.app.Activity
 import android.content.Intent
 import android.net.Uri
 import android.provider.Settings
+import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Arrangement
@@ -72,6 +73,7 @@ fun PermissionsScreen(navigateToDrawer: () -> Unit){
             permissionsStatus[permission] == PermissionStatus.Granted
         }
         if (allPermissionsGranted) {
+            Toast.makeText(activity, "Permisos Permitidos Cargando Siguiente Pagina....", Toast.LENGTH_SHORT).show()
             navigateToDrawer()
         }
     }

@@ -27,8 +27,8 @@ fun InternalNavigationWrapper(navController: NavHostController, modifier: Modifi
 
     NavHost(navController = navController, startDestination = Map, modifier = modifier) {
         composable<Map> {
-            MapScreen{coordenadas ->
-                navController.navigate(MarkerCreation(coordenadas))
+            MapScreen{lat, lng ->
+                navController.navigate(MarkerCreation(lat, lng))
             }
         }
 
@@ -41,7 +41,7 @@ fun InternalNavigationWrapper(navController: NavHostController, modifier: Modifi
 
         composable<MarkerCreation> {backStackEntry ->
             val pantallaMarker =backStackEntry.toRoute<MarkerCreation>()
-            CreateMarkerScreen(pantallaMarker.coordenadas){
+            CreateMarkerScreen(pantallaMarker.lat, pantallaMarker.lng){
                 navController.popBackStack()
             }
         }
@@ -51,8 +51,8 @@ fun InternalNavigationWrapper(navController: NavHostController, modifier: Modifi
             DetailMarkerScreen(
                 id = pantallaMarker.coordenadas,
                 navigateBack = { navController.popBackStack() },
-                navigateCMarker =  { coordenadas ->
-                    navController.navigate(MarkerCreation(coordenadas))
+                navigateCMarker =  { lat, lng ->
+                    navController.navigate(MarkerCreation(lat, lng))
                 }
             )
         }

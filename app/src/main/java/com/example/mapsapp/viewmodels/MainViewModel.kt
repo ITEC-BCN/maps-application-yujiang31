@@ -48,6 +48,12 @@ class MainViewModel: ViewModel() {
     private val _Image = MutableLiveData<Bitmap?>()
     val Image = _Image
 
+    private val _latitud = MutableLiveData<Double>()
+    val latitud = _latitud
+
+    private val _longitud = MutableLiveData<Double>()
+    val longitud = _longitud
+
 
     fun updateClickedPosition(latLng: LatLng) {
         _clickedPosition.value = latLng
@@ -59,17 +65,18 @@ class MainViewModel: ViewModel() {
     // Obtener todos los mapas
     fun getAllMaps() {
         CoroutineScope(Dispatchers.IO).launch {
-            val databaseStudents = database.getAllMaps()
+            val databaseMaps = database.getAllMaps()
             withContext(Dispatchers.Main) {
-                _MapsList.value = databaseStudents
+                _MapsList.value = databaseMaps
             }
         }
     }
 
 
-    // Crear un Nuevo Maps
+    // Crear un Nuevo Maps se ven logs ya que en el momento se usa para comprobar si llegaba a pasar
+    // la info correctamente
     @RequiresApi(Build.VERSION_CODES.O)
-    fun insertNewMaps(name: String, mark: String, image: Bitmap?) {
+    fun insertNewMaps(name: String, mark: String, image: Bitmap?, lat: Double, lng:Double) {
         CoroutineScope(Dispatchers.IO).launch {
             val stream = ByteArrayOutputStream()
             image?.compress(Bitmap.CompressFormat.PNG, 0, stream)
@@ -78,8 +85,9 @@ class MainViewModel: ViewModel() {
             Log.d("Yujiang", "mark/description==null:${mark}")
             Log.d("Yujiang", "image==null:${image== null}")
             Log.d("Yujiang", "stream.size:${stream.size()}")
+            Log.d("Yujiang", "lat/lng.size: $lat/$lng")
             val imageName = database.uploadImage(stream.toByteArray())
-            database.insertMaps(MapsApp( name = name, mark = mark, image = imageName))
+            database.insertMaps(MapsApp( name = name, mark = mark, image = imageName, latitud = lat, longitud = lng))
         }
 
     }

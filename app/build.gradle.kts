@@ -100,6 +100,8 @@ dependencies {
     implementation("io.github.jan-tennert.supabase:postgrest-kt")
     implementation("io.ktor:ktor-client-android:3.1.2")
     implementation("io.coil-kt:coil-compose:2.7.0")
+    implementation ("androidx.compose.material3:material3:1.2.1")
+
 
 
 }

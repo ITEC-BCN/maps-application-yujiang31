@@ -23,12 +23,14 @@ import com.example.mapsapp.viewmodels.MainViewModel
 
 
 @Composable
-fun DetailMarkerScreen(id:String, navigateBack:() -> Unit, navigateCMarker:(String)-> Unit){
+fun DetailMarkerScreen(id:String, navigateBack:() -> Unit, navigateCMarker:(Double, Double)-> Unit){
 
     val myViewModel = viewModel<MainViewModel>()
     myViewModel.getMaps(id)
     val studentName: String by myViewModel.MapsName.observeAsState("")
     val studentMark: String by myViewModel.MapsMark.observeAsState("")
+    val latitud : Double by myViewModel.latitud.observeAsState(0.0)
+    val longitud : Double by myViewModel.longitud.observeAsState(0.0)
 
     Column(
 
@@ -55,7 +57,7 @@ fun DetailMarkerScreen(id:String, navigateBack:() -> Unit, navigateCMarker:(Stri
 
         TextButton(
             onClick = {
-                navigateCMarker("coordenadas")},
+                navigateCMarker(latitud, longitud)},
 
             colors = ButtonDefaults.buttonColors(
                 contentColor = Color.White,

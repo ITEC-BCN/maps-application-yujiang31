@@ -16,14 +16,23 @@ import com.google.maps.android.compose.GoogleMap
 import com.google.maps.android.compose.Marker
 import com.google.maps.android.compose.MarkerState
 import com.google.maps.android.compose.rememberCameraPositionState
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.livedata.observeAsState
 
 
 @Composable
-fun MapScreen(navigateToMarker:(coordinates:String) -> Unit){
+fun MapScreen(navigateToMarker:(Double, Double) -> Unit){
 
     val myViewModel : MainViewModel = viewModel()
     val clickedPosition by myViewModel.clickedPosition.collectAsState()
 
+    // Lista de mapas
+    val mapsList by myViewModel.MapsList.observeAsState(emptyList())
+
+
+    LaunchedEffect(Unit) {
+        myViewModel.getAllMaps()
+    }
     Column(modifier = Modifier.fillMaxSize()) {
         val itb = LatLng(41.4534225, 2.1837151)
         val cameraPositionState = rememberCameraPositionState {
@@ -37,13 +46,24 @@ fun MapScreen(navigateToMarker:(coordinates:String) -> Unit){
             }, onMapLongClick = {
                 Log.d("MAP CLICKED LONG", it.toString())
                 myViewModel.updateClickedPosition(it)
-                navigateToMarker(it.toString())
+                navigateToMarker(it.latitude, it.longitude)
             }
         ){
+
+            // Marcador ITB
             Marker(
                 state = MarkerState(position = itb), title = "ITB",
                 snippet = "Marker at ITB"
             )
+
+            // Pintar el mapa de los marcadores guardados en la BBDD
+            mapsList.forEach { map ->
+                Marker(
+                    state = MarkerState(position = LatLng(map.latitud, map.longitud)),
+                    title = map.name,
+                    snippet = map.mark
+                )
+            }
 
 
             clickedPosition?.let{ posit ->
