@@ -42,9 +42,9 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
 import com.example.mapsapp.data.MapsApp
 import com.example.mapsapp.viewmodels.MainViewModel
-import androidx.compose.material3.SwipeToDismissBox
 import androidx.compose.material3.rememberSwipeToDismissBoxState
 import androidx.compose.ui.platform.LocalContext
+
 
 
 @Composable
