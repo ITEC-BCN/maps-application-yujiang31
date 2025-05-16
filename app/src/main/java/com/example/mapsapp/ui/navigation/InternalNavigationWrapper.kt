@@ -50,10 +50,8 @@ fun InternalNavigationWrapper(navController: NavHostController, modifier: Modifi
             val pantallaMarker = backStackEntry.toRoute<DetailMap>()
             DetailMarkerScreen(
                 id = pantallaMarker.coordenadas,
-                navigateBack = { navController.popBackStack() },
-                navigateCMarker =  { lat, lng ->
-                    navController.navigate(MarkerCreation(lat, lng))
-                }
+                navigateBack = { navController.popBackStack() }
+
             )
         }
 

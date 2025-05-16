@@ -43,6 +43,7 @@ import coil.compose.AsyncImage
 import com.example.mapsapp.data.MapsApp
 import com.example.mapsapp.viewmodels.MainViewModel
 import androidx.compose.material3.rememberSwipeToDismissBoxState
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.platform.LocalContext
 
 
@@ -57,6 +58,10 @@ fun ListScreen(navigateToDetail: (String) -> Unit){
     val studentName: String by myViewModel.MapsName.observeAsState("")
     val studentMark: String by myViewModel.MapsMark.observeAsState("")
 
+
+    LaunchedEffect(Unit) {
+        myViewModel.getAllMaps()
+    }
 
     Column(
         Modifier

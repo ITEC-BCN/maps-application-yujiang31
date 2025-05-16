@@ -17,6 +17,8 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.ByteArrayOutputStream
 import android.util.Log
+import androidx.lifecycle.viewModelScope
+import kotlin.math.ln
 
 
 class MainViewModel: ViewModel() {
@@ -64,10 +66,10 @@ class MainViewModel: ViewModel() {
 
     // Obtener todos los mapas
     fun getAllMaps() {
-        CoroutineScope(Dispatchers.IO).launch {
-            val databaseMaps = database.getAllMaps()
+        viewModelScope.launch(Dispatchers.IO) {
+            val maps = database.getAllMaps()
             withContext(Dispatchers.Main) {
-                _MapsList.value = databaseMaps
+                _MapsList.value = maps
             }
         }
     }
@@ -93,15 +95,40 @@ class MainViewModel: ViewModel() {
     }
 
 
-    fun updateMaps(id: String, name: String, mark: String, image: Bitmap?){
-        val stream = ByteArrayOutputStream()
-        image?.compress(Bitmap.CompressFormat.PNG, 0, stream)
-        val imageName = _selectedMaps?.image?.removePrefix("https://aobflzinjcljzqpxpcxs.supabase.co/storage/v1/object/public/images/")
-        CoroutineScope(Dispatchers.IO).launch {
+    @RequiresApi(Build.VERSION_CODES.O)
+    fun updateMaps(id: String, name: String, mark: String, image: Bitmap?, lat: Double, lng: Double) {
 
-            database.updateMaps(id, name, mark, imageName.toString(), stream.toByteArray())
+        Log.d("Yujiang", "id.value = $id")
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                // Eliminar imagen y mapa antiguo
+                database.deleteMaps(id)
+                database.deleteImage(id)
+                Log.d("Yujiang", "llego aqui 2")
+                // Preparar nueva imagen
+                val stream = ByteArrayOutputStream()
+                image?.compress(Bitmap.CompressFormat.PNG, 0, stream)
+                val imageName = database.uploadImage(stream.toByteArray())
+
+                // Insertar nuevo mapa
+                database.insertMaps(
+                    MapsApp(
+                        name = name,
+                        mark = mark,
+                        image = imageName,
+                        latitud = lat,
+                        longitud = lng
+                    )
+                )
+
+                // Recargar lista de mapas
+                getAllMaps()
+            } catch (e: Exception) {
+                Log.e("MainViewModel", "Error updating map", e)
+            }
         }
     }
+
 
 
     // Obtener un Mapa Especifico por el id
@@ -119,9 +146,10 @@ class MainViewModel: ViewModel() {
     }
 
 
-    fun deleteMaps(id: String){
-        CoroutineScope(Dispatchers.IO).launch {
+    fun deleteMaps(id: String) {
+        viewModelScope.launch(Dispatchers.IO) {
             database.deleteMaps(id)
+            database.deleteImage(id)
             getAllMaps()
         }
     }

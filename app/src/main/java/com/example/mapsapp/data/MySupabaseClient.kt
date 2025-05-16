@@ -77,7 +77,11 @@ class MySupabaseClient {
         }
     }
     suspend fun deleteMaps(id: String){
-        client.from("maps").delete{ filter { eq("id", id) } }
+        client.from("maps").delete{
+            filter {
+                eq("id", id)
+            }
+        }
     }
 
     //SQL operations
