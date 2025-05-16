@@ -141,6 +141,7 @@ fun DetailMarkerScreen(id:String, navigateBack:() -> Unit) {
             }
         }
 
+
         Spacer(modifier = Modifier.height(24.dp))
 
         bitmap.value?.let {

@@ -126,6 +126,7 @@ fun ListScreen(navigateToDetail: (String) -> Unit){
                             ) {
                                 Icon(imageVector = Icons.Default.Delete, contentDescription = "Delete")
                             }
+
                         }
                     ) {
                         MapsItem(Maps = Maps, navigateToDetail = { navigateToDetail(Maps.id.toString()) })

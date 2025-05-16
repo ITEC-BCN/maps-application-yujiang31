@@ -25,4 +25,5 @@ sealed class Destinations {
     @Serializable
     data class MarkerDetails(val id : Int):Destinations
      */
+
 }

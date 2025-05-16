@@ -11,5 +11,6 @@ data class MapsApp (
     val image: String,
     val latitud:Double,
     val longitud:Double
+
 )
 
