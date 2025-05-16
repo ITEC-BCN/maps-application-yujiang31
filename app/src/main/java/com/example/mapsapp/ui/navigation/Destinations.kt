@@ -4,6 +4,10 @@ import kotlinx.serialization.Serializable
 
 
 sealed class Destinations {
+
+    @Serializable
+    object Login: Destinations()
+
     @Serializable
     object Permissions : Destinations()
 
