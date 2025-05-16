@@ -50,7 +50,7 @@ import java.io.File
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun DetailMarkerScreen(id:String, navigateBack:() -> Unit) {
+fun DetailMarkerScreen(id:String,lat:Double, lng:Double,  navigateBack:() -> Unit) {
 
     val context = LocalContext.current
 
@@ -60,8 +60,7 @@ fun DetailMarkerScreen(id:String, navigateBack:() -> Unit) {
     // Observa los datos del marcador seleccionado
     val name by myViewModel.MapsName.observeAsState("")
     val mark by myViewModel.MapsMark.observeAsState("")
-    val latitud by myViewModel.latitud.observeAsState("")
-    val longitud by myViewModel.longitud.observeAsState("")
+
 
     val imageBitmap by myViewModel.Image.observeAsState()
 
@@ -156,8 +155,8 @@ fun DetailMarkerScreen(id:String, navigateBack:() -> Unit) {
         // BOTÓN DE ACTUALIZACIÓN
         Button(
             onClick = {
-                val lat = myViewModel.latitud.value ?: 0.0
-                val lng = myViewModel.longitud.value ?: 0.0
+                val lat = lat
+                val lng = lng
                 myViewModel.updateMaps(id = id, name = title, mark = description, cameraViewModel.capturedImage.value ?: imageBitmap, lat, lng)
 
                 Toast.makeText(context, "¡Marcador actualizado!", Toast.LENGTH_SHORT).show()

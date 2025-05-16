@@ -33,9 +33,8 @@ fun InternalNavigationWrapper(navController: NavHostController, modifier: Modifi
         }
 
         composable<List> {
-            ListScreen{maps ->
-                navController.navigate(DetailMap(maps))
-
+            ListScreen{id, lat, lng ->
+                navController.navigate(DetailMap(id = id, lat = lat, lng = lng))
             }
         }
 
@@ -49,8 +48,11 @@ fun InternalNavigationWrapper(navController: NavHostController, modifier: Modifi
         composable<DetailMap> { backStackEntry ->
             val pantallaMarker = backStackEntry.toRoute<DetailMap>()
             DetailMarkerScreen(
-                id = pantallaMarker.coordenadas,
-                navigateBack = { navController.popBackStack() }
+                id = pantallaMarker.id,
+                lat = pantallaMarker.lat,
+                lng = pantallaMarker.lng,
+                navigateBack = { navController.popBackStack()
+                }
 
             )
         }

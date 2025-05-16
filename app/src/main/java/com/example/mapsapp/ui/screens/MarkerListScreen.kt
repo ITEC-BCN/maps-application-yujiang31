@@ -49,7 +49,7 @@ import androidx.compose.ui.platform.LocalContext
 
 
 @Composable
-fun ListScreen(navigateToDetail: (String) -> Unit){
+fun ListScreen(navigateToDetail: (String, Double, Double) -> Unit){
 
     val myViewModel = viewModel<MainViewModel>()
     val MapsList by myViewModel.MapsList.observeAsState(emptyList<MapsApp>())
@@ -57,7 +57,8 @@ fun ListScreen(navigateToDetail: (String) -> Unit){
     val context = LocalContext.current
     val studentName: String by myViewModel.MapsName.observeAsState("")
     val studentMark: String by myViewModel.MapsMark.observeAsState("")
-
+    val latitud by myViewModel.latitud.observeAsState("")
+    val longitud by myViewModel.longitud.observeAsState("")
 
     LaunchedEffect(Unit) {
         myViewModel.getAllMaps()
@@ -129,7 +130,7 @@ fun ListScreen(navigateToDetail: (String) -> Unit){
 
                         }
                     ) {
-                        MapsItem(Maps = Maps, navigateToDetail = { navigateToDetail(Maps.id.toString()) })
+                        MapsItem(Maps = Maps, navigateToDetail = { navigateToDetail(Maps.id.toString(), Maps.latitud, Maps.longitud) })
                     }
                 }
             }

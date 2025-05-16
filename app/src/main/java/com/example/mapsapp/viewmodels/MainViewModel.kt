@@ -98,6 +98,8 @@ class MainViewModel: ViewModel() {
     @RequiresApi(Build.VERSION_CODES.O)
     fun updateMaps(id: String, name: String, mark: String, image: Bitmap?, lat: Double, lng: Double) {
 
+        Log.d("Yujiang", "lat.value = $lat")
+        Log.d("Yujiang", "lat.value = $lng")
         Log.d("Yujiang", "id.value = $id")
         CoroutineScope(Dispatchers.IO).launch {
             try {
