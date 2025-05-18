@@ -53,7 +53,7 @@ class MySupabaseClient {
 
 
     // Registro de usuario
-
+/*
     suspend fun signUpWithEmail(emailValue: String, passwordValue: String): AuthState {
         try {
 
@@ -66,6 +66,7 @@ class MySupabaseClient {
             return AuthState.Error(e.localizedMessage)
         }
     }
+
 
     suspend fun signInWithEmail(emailValue: String, passwordValue: String): AuthState {
         try {
@@ -92,7 +93,7 @@ class MySupabaseClient {
             return AuthState.Error(e.localizedMessage)
         }
     }
-
+*/
 
 
 

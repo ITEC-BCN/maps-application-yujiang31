@@ -23,7 +23,7 @@ import com.example.mapsapp.utils.SharedPreferencesHelper
 import kotlin.math.ln
 
 
-class MainViewModel(private val sharedPreferences: SharedPreferencesHelper): ViewModel() {
+class MainViewModel(): ViewModel() {
 
 
     // Base de datos Supabase invocacion
@@ -31,9 +31,13 @@ class MainViewModel(private val sharedPreferences: SharedPreferencesHelper): Vie
     val database = MyApp.database
 
 
+    /*
     init {
         checkExistingSession()
     }
+
+
+     */
 
 
     // Lista de Mapas
@@ -79,6 +83,7 @@ class MainViewModel(private val sharedPreferences: SharedPreferencesHelper): Vie
     val user = _user
 
 
+    /*
     private fun checkExistingSession() {
         viewModelScope.launch {
             val accessToken = sharedPreferences.getAccessToken()
@@ -90,6 +95,7 @@ class MainViewModel(private val sharedPreferences: SharedPreferencesHelper): Vie
             }
         }
     }
+
 
     fun signUp() {
         viewModelScope.launch {
@@ -143,6 +149,8 @@ class MainViewModel(private val sharedPreferences: SharedPreferencesHelper): Vie
         }
     }
 
+
+*/
 
 
     fun editEmail(value: String) {

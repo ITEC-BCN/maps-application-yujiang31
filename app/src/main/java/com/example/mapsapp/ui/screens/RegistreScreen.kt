@@ -16,12 +16,12 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.mapsapp.utils.AuthState
 import com.example.mapsapp.utils.SharedPreferencesHelper
-import com.example.mapsapp.viewmodels.AuthViewModelFactory
 import com.example.mapsapp.viewmodels.MainViewModel
 
 @Composable
-fun RegistreScreen(navigateToHome: () -> Unit, navigateToLogin: () -> Unit) {
 
+fun RegistreScreen(navigateToHome: () -> Unit, navigateToLogin: () -> Unit) {
+/*
     val context = LocalContext.current
     val viewModel: MainViewModel = viewModel(factory = AuthViewModelFactory(SharedPreferencesHelper(context)))
 
@@ -95,6 +95,7 @@ fun RegistreScreen(navigateToHome: () -> Unit, navigateToLogin: () -> Unit) {
                     .padding(bottom = 24.dp)
             )
 
+            /*
             Button(
                 onClick = { viewModel.signUp() },
                 modifier = Modifier
@@ -104,6 +105,8 @@ fun RegistreScreen(navigateToHome: () -> Unit, navigateToLogin: () -> Unit) {
                 Text("Registrarse")
             }
 
+             */
+
             Spacer(modifier = Modifier.height(12.dp))
 
             TextButton(onClick = navigateToLogin) {
@@ -111,4 +114,6 @@ fun RegistreScreen(navigateToHome: () -> Unit, navigateToLogin: () -> Unit) {
             }
         }
     }
+
+ */
 }

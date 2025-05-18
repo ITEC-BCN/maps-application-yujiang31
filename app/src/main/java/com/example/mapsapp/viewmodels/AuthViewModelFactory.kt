@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.example.mapsapp.utils.SharedPreferencesHelper
 import com.example.mapsapp.viewmodels.MainViewModel
 
+/*
 class AuthViewModelFactory(private val shredPreferences: SharedPreferencesHelper): ViewModelProvider.Factory {
     override fun <T : androidx.lifecycle.ViewModel> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(ViewModel::class.java)) {
@@ -13,3 +14,6 @@ class AuthViewModelFactory(private val shredPreferences: SharedPreferencesHelper
         throw IllegalArgumentException("Unknown ViewModel class")
     }
 }
+
+
+ */

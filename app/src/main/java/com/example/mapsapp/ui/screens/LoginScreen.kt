@@ -17,7 +17,6 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.mapsapp.utils.AuthState
 import com.example.mapsapp.utils.SharedPreferencesHelper
-import com.example.mapsapp.viewmodels.AuthViewModelFactory
 import com.example.mapsapp.viewmodels.MainViewModel
 
 
@@ -30,7 +29,10 @@ fun LoginScreen(
     navigateToRegister: () -> Unit
 ) {
     val context = LocalContext.current
+    /*
     val viewModel: MainViewModel = viewModel(factory = AuthViewModelFactory(SharedPreferencesHelper(context)))
+
+
 
     val authState by viewModel.authState.observeAsState()
     val showError by viewModel.showError.observeAsState()
@@ -43,6 +45,8 @@ fun LoginScreen(
         }
     }
 
+
+
     if (showError == true) {
         val errorMessage = (authState as? AuthState.Error)?.message
         val messageToShow = if (errorMessage?.contains("invalid_credentials") == true) {
@@ -53,6 +57,8 @@ fun LoginScreen(
         Toast.makeText(context, messageToShow, Toast.LENGTH_LONG).show()
         viewModel.errorMessageShowed()
     }
+
+
 
     // Pantalla Login
     Box(
@@ -102,6 +108,7 @@ fun LoginScreen(
                     .padding(bottom = 24.dp)
             )
 
+            /*
             Button(
                 onClick = { viewModel.signIn() },
                 modifier = Modifier
@@ -111,6 +118,8 @@ fun LoginScreen(
                 Text("Iniciar sesión")
             }
 
+             */
+
             Spacer(modifier = Modifier.height(12.dp))
 
             TextButton(onClick = navigateToRegister) {
@@ -118,4 +127,8 @@ fun LoginScreen(
             }
         }
     }
+
+     */
 }
+
+
