@@ -102,6 +102,9 @@ dependencies {
     implementation("io.coil-kt:coil-compose:2.7.0")
     implementation ("androidx.compose.material3:material3:1.2.1")
     implementation("io.github.jan-tennert.supabase:auth-kt:3.1.4")
+    implementation("io.github.jan-tennert.supabase:auth-kt:3.1.4")
+    implementation(platform("io.github.jan-tennert.supabase:bom:3.1.4"))
+    implementation("io.ktor:ktor-client-android:3.1.2")
 
 
 }

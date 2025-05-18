@@ -4,7 +4,12 @@ import android.graphics.Bitmap
 import android.os.Build
 import androidx.annotation.RequiresApi
 import com.example.mapsapp.BuildConfig
+import com.example.mapsapp.utils.AuthState
 import io.github.jan.supabase.SupabaseClient
+import io.github.jan.supabase.auth.Auth
+import io.github.jan.supabase.auth.auth
+import io.github.jan.supabase.auth.providers.builtin.Email
+import io.github.jan.supabase.auth.user.UserSession
 import io.github.jan.supabase.createSupabaseClient
 import io.github.jan.supabase.postgrest.Postgrest
 import io.github.jan.supabase.postgrest.from
@@ -26,6 +31,7 @@ class MySupabaseClient {
             supabaseUrl = supabaseUrl,
             supabaseKey = supabaseKey
         ){
+            install(Auth){autoLoadFromStorage = true}
             install(Postgrest)
             install(Storage)
         }
@@ -44,6 +50,43 @@ class MySupabaseClient {
 
     fun buildImageUrl(imageFileName: String) = "${this.supabaseUrl}/storage/v1/object/public/images/${imageFileName}"
 
+
+
+    // Registro de usuario
+
+    suspend fun signUpWithEmail(emailValue: String, passwordValue: String): AuthState {
+        try {
+
+            client.auth.signUpWith(Email) {
+                email = emailValue
+                password = passwordValue
+            }
+            return AuthState.Authenticated
+        } catch (e: Exception) {
+            return AuthState.Error(e.localizedMessage)
+        }
+    }
+
+    fun retrieveCurrentSession(): UserSession?{
+        val session = client.auth.currentSessionOrNull()
+        return session
+    }
+
+    fun refreshSession(): AuthState {
+        try {
+            client.auth.currentSessionOrNull()
+            return AuthState.Authenticated
+        } catch (e: Exception) {
+            return AuthState.Error(e.localizedMessage)
+        }
+    }
+
+
+
+
+
+
+    //Operaciones CRUD, update se hace uso de delete + insert
     suspend fun getAllMaps(): List<MapsApp> {
         return client.from("maps").select().decodeList<MapsApp>()
     }
@@ -84,7 +127,6 @@ class MySupabaseClient {
         }
     }
 
-    //SQL operations
 
 
     suspend fun deleteImage(imageName: String){

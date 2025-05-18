@@ -18,10 +18,12 @@ import kotlinx.coroutines.withContext
 import java.io.ByteArrayOutputStream
 import android.util.Log
 import androidx.lifecycle.viewModelScope
+import com.example.mapsapp.utils.AuthState
+import com.example.mapsapp.utils.SharedPreferencesHelper
 import kotlin.math.ln
 
 
-class MainViewModel: ViewModel() {
+class MainViewModel(private val sharedPreferences: SharedPreferencesHelper): ViewModel() {
 
 
     // Base de datos Supabase invocacion
@@ -55,6 +57,23 @@ class MainViewModel: ViewModel() {
 
     private val _longitud = MutableLiveData<Double>()
     val longitud = _longitud
+
+
+
+    // User
+    private val authManager = MyApp.database
+    private val _email = MutableLiveData<String>()
+    val email = _email
+    private val _password = MutableLiveData<String>()
+    val password = _password
+    private val _authState = MutableLiveData<AuthState>()
+    val authState = _authState
+    private val _showError = MutableLiveData<Boolean>(false)
+    val showError = _showError
+    private val _user = MutableLiveData<String?>()
+    val user = _user
+
+
 
 
     fun updateClickedPosition(latLng: LatLng) {
