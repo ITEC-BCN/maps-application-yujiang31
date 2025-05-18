@@ -47,7 +47,7 @@ fun RegistreScreen(navigateToHome: () -> Unit, navigateToLogin: () -> Unit) {
         viewModel.errorMessageShowed()
     }
 
-    // UI estilizada para registro
+    // Pantalla registro
     Box(
         modifier = Modifier
             .fillMaxSize()
