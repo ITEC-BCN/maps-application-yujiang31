@@ -67,6 +67,18 @@ class MySupabaseClient {
         }
     }
 
+    suspend fun signInWithEmail(emailValue: String, passwordValue: String): AuthState {
+        try {
+            client.auth.signInWith(Email) {
+                email = emailValue
+                password = passwordValue
+            }
+            return AuthState.Authenticated
+        } catch (e: Exception) {
+            return AuthState.Error(e.localizedMessage)
+        }
+    }
+
     fun retrieveCurrentSession(): UserSession?{
         val session = client.auth.currentSessionOrNull()
         return session

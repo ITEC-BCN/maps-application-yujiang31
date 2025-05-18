@@ -31,6 +31,11 @@ class MainViewModel(private val sharedPreferences: SharedPreferencesHelper): Vie
     val database = MyApp.database
 
 
+    init {
+        checkExistingSession()
+    }
+
+
     // Lista de Mapas
     private val _MapsList = MutableLiveData<List<MapsApp>>()
     val MapsList = _MapsList
@@ -73,6 +78,80 @@ class MainViewModel(private val sharedPreferences: SharedPreferencesHelper): Vie
     private val _user = MutableLiveData<String?>()
     val user = _user
 
+
+    private fun checkExistingSession() {
+        viewModelScope.launch {
+            val accessToken = sharedPreferences.getAccessToken()
+            val refreshToken = sharedPreferences.getRefreshToken()
+            when {
+                !accessToken.isNullOrEmpty() -> refreshToken()
+                !refreshToken.isNullOrEmpty() -> refreshToken()
+                else -> _authState.value = AuthState.Unauthenticated
+            }
+        }
+    }
+
+    fun signUp() {
+        viewModelScope.launch {
+            _authState.value = authManager.signUpWithEmail(_email.value!!, _password.value!!)
+            if (_authState.value is AuthState.Error) {
+                _showError.value = true
+            } else {
+                val session = authManager.retrieveCurrentSession()
+                sharedPreferences.saveAuthData(
+                    session!!.accessToken,
+                    session.refreshToken
+                )
+            }
+        }
+    }
+
+    fun signIn() {
+        viewModelScope.launch {
+            _authState.value = authManager.signInWithEmail(_email.value!!, _password.value!!)
+            if (_authState.value is AuthState.Error) {
+                _showError.value = true
+            } else {
+                val session = authManager.retrieveCurrentSession()
+                sharedPreferences.saveAuthData(
+                    session!!.accessToken,
+                    session.refreshToken
+                )
+            }
+        }
+    }
+
+
+    fun logout() {
+        viewModelScope.launch {
+            sharedPreferences.clear()
+            _authState.value = AuthState.Unauthenticated
+        }
+    }
+
+
+
+    private fun refreshToken() {
+        viewModelScope.launch {
+            try {
+                database.refreshSession()
+                _authState.value = AuthState.Authenticated
+            } catch (e: Exception) {
+                sharedPreferences.clear()
+                _authState.value = AuthState.Unauthenticated
+            }
+        }
+    }
+
+
+
+    fun editEmail(value: String) {
+        _email.value = value
+    }
+
+    fun editPassword(value: String) {
+        _password.value = value
+    }
 
 
 
@@ -182,6 +261,11 @@ class MainViewModel(private val sharedPreferences: SharedPreferencesHelper): Vie
 
     fun editMapsMark(mark: String) {
         _MapsMark.value = mark
+    }
+
+
+    fun errorMessageShowed(){
+        _showError.value = false
     }
 
 }
